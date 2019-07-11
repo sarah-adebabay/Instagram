@@ -20,8 +20,6 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_home" />
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/logOut_actionbtn"
         android:layout_width="wrap_content"
@@ -38,5 +36,12 @@
         android:layout_gravity="bottom|start"
         android:layout_margin="16dp"
         app:srcCompat="@android:drawable/ic_input_add" />
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/menu_bottom_navigation" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
