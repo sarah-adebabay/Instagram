@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.instagram.PostAdapter;
 import com.example.instagram.R;
@@ -27,6 +28,7 @@ public class PostsFragment extends Fragment {
     RecyclerView rvPosts;
     PostAdapter postAdapter;
     List<Post> feedPosts;
+    SwipeRefreshLayout swipeContainer;
 
 
     @Nullable
@@ -45,7 +47,56 @@ public class PostsFragment extends Fragment {
 
         queryPosts();
 
+        swipeContainer = view.findViewById(R.id.swipeContainer);
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                fetchTimelineAsync(0);
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
+
     }
+
+    public void fetchTimelineAsync(int page) {
+        postAdapter.clear();
+
+        ParseQuery<Post> postQuery = new ParseQuery<>(Post.class);
+        postQuery.include(Post.KEY_USER);
+        postQuery.setLimit(20);
+        postQuery.addDescendingOrder(Post.KEY_CREATED_AT);
+        postQuery.findInBackground(new FindCallback<Post>() {
+            @Override
+            public void done(List<Post> posts, ParseException e) {
+                if (e == null) {
+                    for(int i = 0; i < posts.size(); i++) {
+                        Post post = posts.get(i);
+                        Log.d("HomeActivity", "Post["
+                                + i
+                                + "] = "
+                                + post.getDescription()
+                                + "\n username = "
+                                + post.getUser().getUsername()); //why is the description not showing up
+                    }
+                    postAdapter.addAll(posts);
+                } else {
+                    Log.e("QueryIssue", "Something is wrong here!");
+                    e.printStackTrace();
+                }
+            }
+        });
+
+    }
+
 
     protected void queryPosts() {
         ParseQuery<Post> postQuery = new ParseQuery<>(Post.class);
