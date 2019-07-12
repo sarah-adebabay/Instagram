@@ -10,7 +10,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.instagram.model.Post;
+import com.parse.ParseFile;
 
 import java.util.List;
 
@@ -19,7 +21,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     private List<Post> feed;
     Context context;
 
-    public PostAdapter(List<Post> posts) {
+    public PostAdapter(Context context, List<Post> posts) {
         feed = posts;
     }
 
@@ -39,12 +41,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         Post post = feed.get(i);
-
-        viewHolder.tvUsername.setText(post.getUser().getUsername());
-        viewHolder.tvCaption.setText(post.getDescription());
-
-        //adding the image into your holder
-        //viewHolder.ivPostedImage.setImage(post.getImage())
+        viewHolder.bind(post);
     }
 
     @Override
@@ -52,7 +49,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         return feed.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView ivPostedImage;
         TextView tvUsername;
@@ -66,8 +63,16 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
         }
 
-
-        //trying to do something
+        public void bind(Post post) {
+            tvUsername.setText(post.getUser().getUsername());
+            tvCaption.setText(post.getDescription());
+            ParseFile photo = post.getImage();
+            if (photo != null) {
+                Glide.with(context)
+                        .load(photo.getUrl())
+                        .into(ivPostedImage);
+            }
+        }
     }
 
 }

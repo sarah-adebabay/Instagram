@@ -3,18 +3,19 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/action_compose"
         android:icon="@android:drawable/ic_menu_edit"
         android:title="Compose"
         app:showAsAction="always" />
     <item
-        android:id="@+id/Home"
+        android:id="@+id/action_home"
         android:icon="@android:drawable/ic_menu_compass"
-        android:title="action_home"
+        android:title="Home"
         android:visible="true"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_profile"
         android:icon="@drawable/ic_person_black_24dp"
-        android:title="profile"
+        android:title="Profile"
         app:showAsAction="always" />
 </menu>
