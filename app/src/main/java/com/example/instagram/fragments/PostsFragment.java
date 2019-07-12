@@ -64,10 +64,9 @@ public class PostsFragment extends Fragment {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-
     }
 
-    public void fetchTimelineAsync(int page) {
+    protected void fetchTimelineAsync(int page) {
         postAdapter.clear();
 
         ParseQuery<Post> postQuery = new ParseQuery<>(Post.class);
@@ -88,6 +87,7 @@ public class PostsFragment extends Fragment {
                                 + post.getUser().getUsername()); //why is the description not showing up
                     }
                     postAdapter.addAll(posts);
+                    swipeContainer.setRefreshing(false);
                 } else {
                     Log.e("QueryIssue", "Something is wrong here!");
                     e.printStackTrace();

@@ -1,6 +1,7 @@
 package com.example.instagram;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,13 +9,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.instagram.fragments.PostDetailsFragment;
 import com.example.instagram.model.Post;
 import com.parse.ParseFile;
 
 import java.util.List;
+
+import static com.example.instagram.HomeActivity.fragmentManager;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
@@ -63,7 +68,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
         }
 
-        public void bind(Post post) {
+        public void bind(final Post post) {
             tvUsername.setText(post.getUser().getUsername());
             tvCaption.setText(post.getDescription());
             ParseFile photo = post.getImage();
@@ -72,6 +77,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                         .load(photo.getUrl())
                         .into(ivPostedImage);
             }
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //go to the PostDetailsFragment
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("Post", post);
+                    Fragment fragment = new PostDetailsFragment();
+                    fragment.setArguments(bundle);
+                    fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
+                }
+            });
         }
     }
 
